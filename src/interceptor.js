@@ -1,47 +1,80 @@
 const fs = require('fs');
 const diff = require('diff');
 const { readSnapshot, createSnapshot, restoreFromSnapshot } = require('./snapshot');
+const { translate } = require('./translator');
+const { askApproval } = require('./gate');
 
-// Will be implemented in Phase 3 & 4
-// const { translate } = require('./translator');
-// const { askApproval } = require('./gate');
+// Process changes synchronously by queueing them
+const queue = [];
+let isProcessing = false;
 
 async function handleIntercept(type, filePath) {
-  // During Phase 2, we just mock the gate to always approve for now, 
-  // or log the diff to console.
-  
+  queue.push({ type, filePath });
+  if (!isProcessing) {
+    isProcessing = true;
+    while (queue.length > 0) {
+      const task = queue.shift();
+      await processIntercept(task.type, task.filePath);
+    }
+    isProcessing = false;
+  }
+}
+
+async function processIntercept(type, filePath) {
   if (type === 'change') {
     const oldContent = readSnapshot(filePath, 'latest') || '';
     const newContent = fs.readFileSync(filePath, 'utf8');
     
-    const patch = diff.createTwoFilesPatch(
-      filePath, 
-      filePath, 
-      oldContent, 
-      newContent,
-      'Old',
-      'New'
-    );
+    const patchParts = diff.diffLines(oldContent, newContent);
+    const translation = translate(patchParts, filePath, type);
     
-    console.log(`\n[Interceptor] Changed file: ${filePath}`);
-    console.log(patch);
+    // Snippet for UI
+    let snippet = '';
+    patchParts.forEach(part => {
+      if (part.added) snippet += `+ ${part.value}`;
+      if (part.removed) snippet += `- ${part.value}`;
+    });
+    // Truncate snippet if too long
+    if (snippet.length > 500) snippet = snippet.substring(0, 500) + '...\n(diff truncated)';
+
+    const decision = await askApproval(translation, filePath, snippet.trim());
     
-    // Mock approval
-    createSnapshot(filePath, 'latest');
+    if (decision === 'approve' || decision === 'approved_auto') {
+      createSnapshot(filePath, 'latest');
+    } else {
+      // Reject: write old content back immediately
+      fs.writeFileSync(filePath, oldContent, 'utf8');
+    }
   } 
   else if (type === 'add') {
     const newContent = fs.readFileSync(filePath, 'utf8');
-    const firstLines = newContent.split('\n').slice(0, 20).join('\n');
-    console.log(`\n[Interceptor] New file: ${filePath}\nPreview:\n${firstLines}`);
+    const firstLines = newContent.split('\n').slice(0, 10).join('\n');
     
-    // Mock approval
-    createSnapshot(filePath, 'latest');
+    const patchParts = diff.diffLines('', newContent);
+    const translation = translate(patchParts, filePath, type);
+    
+    const decision = await askApproval(translation, filePath, `+ ${firstLines}`);
+    
+    if (decision === 'approve' || decision === 'approved_auto') {
+      createSnapshot(filePath, 'latest');
+    } else {
+      fs.unlinkSync(filePath);
+    }
   }
   else if (type === 'unlink') {
     const oldContent = readSnapshot(filePath, 'latest') || '';
-    console.log(`\n[Interceptor] Deleted file: ${filePath}\nLast known content length: ${oldContent.length} chars`);
+    const patchParts = diff.diffLines(oldContent, '');
+    const translation = translate(patchParts, filePath, type);
     
-    // Mock approval (do nothing so file stays deleted, but in real case we would restore if rejected)
+    const decision = await askApproval(translation, filePath, `- (file deleted)`);
+    
+    if (decision === 'approve' || decision === 'approved_auto') {
+      // It's already deleted from disk, just remove snapshot
+      // Wait, we need a removeSnapshot tool? Let's assume snapshot stays as backup
+    } else {
+      // Restore
+      fs.writeFileSync(filePath, oldContent, 'utf8');
+    }
   }
 }
 
