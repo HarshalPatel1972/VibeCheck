@@ -42,7 +42,8 @@ program
   .option('--last', 'Undo the last approved decision')
   .option('--session', 'Restore entire project to state before this session started')
   .action((id, options) => {
-    console.log(chalk.blue('Rollback command not implemented yet.'));
+    const { performRollback } = require('../src/rollback');
+    performRollback(id, options);
   });
 
 program.parse(process.argv);
