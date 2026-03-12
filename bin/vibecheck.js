@@ -25,7 +25,8 @@ program
   .option('--today', 'View only today\'s decisions')
   .option('--rejected', 'View only rejected decisions')
   .action((options) => {
-    console.log(chalk.blue('Log command not implemented yet.'));
+    const { displayLog } = require('../src/logger');
+    displayLog(options);
   });
 
 program

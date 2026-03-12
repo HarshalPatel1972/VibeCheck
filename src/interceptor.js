@@ -3,6 +3,7 @@ const diff = require('diff');
 const { readSnapshot, createSnapshot, restoreFromSnapshot } = require('./snapshot');
 const { translate } = require('./translator');
 const { askApproval } = require('./gate');
+const { logDecision } = require('./logger');
 
 // Process changes synchronously by queueing them
 const queue = [];
@@ -39,7 +40,20 @@ async function processIntercept(type, filePath) {
 
     const decision = await askApproval(translation, filePath, snippet.trim());
     
-    if (decision === 'approve' || decision === 'approved_auto') {
+    const isApproved = decision === 'approve' || decision === 'approved_auto';
+    
+    logDecision({
+      filePath, 
+      type, 
+      severity: translation.severity,
+      plainEnglish: translation.plainEnglish,
+      linesAdded: translation.linesAdded,
+      linesRemoved: translation.linesRemoved,
+      decision: isApproved ? 'approved' : 'rejected',
+      decidedBy: decision === 'approved_auto' ? 'auto' : 'user'
+    });
+
+    if (isApproved) {
       createSnapshot(filePath, 'latest');
     } else {
       // Reject: write old content back immediately
@@ -55,7 +69,19 @@ async function processIntercept(type, filePath) {
     
     const decision = await askApproval(translation, filePath, `+ ${firstLines}`);
     
-    if (decision === 'approve' || decision === 'approved_auto') {
+    const isApproved = decision === 'approve' || decision === 'approved_auto';
+    logDecision({
+      filePath, 
+      type, 
+      severity: translation.severity,
+      plainEnglish: translation.plainEnglish,
+      linesAdded: translation.linesAdded,
+      linesRemoved: 0,
+      decision: isApproved ? 'approved' : 'rejected',
+      decidedBy: decision === 'approved_auto' ? 'auto' : 'user'
+    });
+
+    if (isApproved) {
       createSnapshot(filePath, 'latest');
     } else {
       fs.unlinkSync(filePath);
@@ -68,7 +94,19 @@ async function processIntercept(type, filePath) {
     
     const decision = await askApproval(translation, filePath, `- (file deleted)`);
     
-    if (decision === 'approve' || decision === 'approved_auto') {
+    const isApproved = decision === 'approve' || decision === 'approved_auto';
+    logDecision({
+      filePath, 
+      type, 
+      severity: translation.severity,
+      plainEnglish: translation.plainEnglish,
+      linesAdded: 0,
+      linesRemoved: translation.linesRemoved,
+      decision: isApproved ? 'approved' : 'rejected',
+      decidedBy: decision === 'approved_auto' ? 'auto' : 'user'
+    });
+
+    if (isApproved) {
       // It's already deleted from disk, just remove snapshot
       // Wait, we need a removeSnapshot tool? Let's assume snapshot stays as backup
     } else {
