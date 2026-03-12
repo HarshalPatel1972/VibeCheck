@@ -33,7 +33,8 @@ program
   .command('summary')
   .description('View session summary')
   .action(() => {
-    console.log(chalk.blue('Summary command not implemented yet.'));
+    const { generateSummary } = require('../src/summary');
+    generateSummary();
   });
 
 program
