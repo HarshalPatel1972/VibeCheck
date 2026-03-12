@@ -1,6 +1,7 @@
 const { prompt } = require('enquirer');
 const chalk = require('chalk');
 const boxen = require('boxen');
+const { getConfig } = require('./config');
 
 let decisionCount = 0;
 
@@ -19,10 +20,14 @@ function getSeverityColor(severity) {
 async function askApproval(translation, filePath, diffSnippet = '') {
   decisionCount++;
   
-  const { severity, plainEnglish } = translation;
+  const config = getConfig();
+  const { plainEnglish } = translation;
+  
+  // Apply severity override
+  let severity = config.severityOverrides[translation.patternId] || translation.severity;
   
   // Auto-approve rule
-  if (severity === 'INFO' || severity === 'LOW') {
+  if (config.autoApproveThreshold.includes(severity)) {
     return 'approved_auto';
   }
   

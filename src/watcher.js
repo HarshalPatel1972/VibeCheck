@@ -5,11 +5,25 @@ const path = require('path');
 
 const { handleIntercept } = require('./interceptor');
 const { initSnapshots } = require('./snapshot');
+const { initConfig } = require('./config');
+const fs = require('fs');
+
+function getIgnoredPatterns() {
+  const ignoreFile = path.join(process.cwd(), '.vibecheckignore');
+  if (fs.existsSync(ignoreFile)) {
+    return fs.readFileSync(ignoreFile, 'utf8')
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line && !line.startsWith('#'));
+  }
+  return [];
+}
 
 function startWatching() {
-  console.log(chalk.blue('Initializing snapshots...'));
+  console.log(chalk.blue('Initializing VibeCheck...'));
+  initConfig();
   initSnapshots();
-  console.log(chalk.green('Snapshots ready.'));
+  console.log(chalk.green('Snapshots and config ready.'));
 
   console.log(boxen(
     chalk.bold('VibeCheck is watching your project\n') +
@@ -32,7 +46,8 @@ function startWatching() {
       '**/.vibecheck/**',
       '**/*.log',
       '**/dist/**',
-      '**/build/**'
+      '**/build/**',
+      ...getIgnoredPatterns()
     ],
     persistent: true,
     ignoreInitial: true
