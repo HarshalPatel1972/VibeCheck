@@ -1,0 +1,32 @@
+{
+  "name": "vibe-check",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HarshalPatel1972/VibeCheck.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HarshalPatel1972/VibeCheck/issues"
+  },
+  "homepage": "https://github.com/HarshalPatel1972/VibeCheck#readme",
+  "description": "",
+  "dependencies": {
+    "boxen": "^5.1.2",
+    "chalk": "^4.1.2",
+    "chokidar": "^5.0.0",
+    "commander": "^14.0.3",
+    "diff": "^8.0.3",
+    "enquirer": "^2.4.1",
+    "ora": "^5.4.1"
+  },
+  "bin": {
+    "vibecheck": "./bin/vibecheck.js"
+  }
+}

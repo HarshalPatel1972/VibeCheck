@@ -1,0 +1,5 @@
+node_modules/
+.vibecheck/
+*.log
+dist/
+build/
