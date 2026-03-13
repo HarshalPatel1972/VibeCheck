@@ -8,7 +8,7 @@ A real-time checkpoint layer that intercepts every AI agent decision, translates
 
 Hundreds of millions of people are vibe coding in 2026. AI agents make hundreds of decisions per session — restructuring files, adding dependencies, modifying databases, touching secrets — without ever asking. Students and beginners ship applications they don't understand, can't maintain, and can't fix when they break.
 
-No free, simple, open source tool exists to give them visibility and control. **VibeCheck** is that tool.
+No simple, automated tool exists to give them visibility and control. **VibeCheck** is that tool.
 
 ![VibeCheck Demo](https://via.placeholder.com/600x300.png?text=VibeCheck+Demo+GIF) _(Imagine a GIF showing VibeCheck intercepting a CRITICAL decision to drop a database table)_
 
