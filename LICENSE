@@ -1,0 +1,16 @@
+Copyright (c) 2026 Harshal Patel
+
+All rights reserved.
+
+The intellectual property of the VibeCheck CLI tool (including all source code, documentation, algorithms, and design concepts) is owned exclusively by Harshal Patel.
+
+1. PROHIBITED USES:
+   - Redistribution, modification, or sale of this software, either in source code or binary form, is strictly prohibited without prior written permission from the copyright holder.
+   - Any attempt to reverse engineer, decompile, or create derivative works based on this software is strictly prohibited.
+   - The use of this software for training artificial intelligence models or coding agents is strictly prohibited.
+
+2. USAGE:
+   - This software is provided "as-is", without warranty of any kind.
+   - You are granted a limited, personal, non-transferable license to use the compiled version of this software for its intended purpose (as a CLI tool installed via npm).
+
+For commercial licensing or usage permissions, contact: hp842484@gmail.com

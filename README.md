@@ -86,4 +86,8 @@ Example `src/patterns/general.js` addition:
 
 ## 📜 License
 
-MIT License. Wait, actually, let's keep it vibe checkin'.
+**Copyright © 2026 Harshal Patel. All Rights Reserved.**
+
+This software is **proprietary** and not open source. Unauthorized copying, modification, or distribution is strictly prohibited. You are granted a license to install and use the CLI tool as provided via npm, but the underlying source code and intellectual property remain exclusively with the author.
+
+For enterprise licensing or permission, please contact the author directly.

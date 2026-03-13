@@ -10,8 +10,9 @@
     "url": "git+https://github.com/HarshalPatel1972/VibeCheck.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Harshal Patel <hp842484@gmail.com>",
+  "license": "UNLICENSED",
+  "private": false,
   "bugs": {
     "url": "https://github.com/HarshalPatel1972/VibeCheck/issues"
   },
