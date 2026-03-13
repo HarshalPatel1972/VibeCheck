@@ -10,7 +10,7 @@ Hundreds of millions of people are vibe coding in 2026. AI agents make hundreds 
 
 No simple, automated tool exists to give them visibility and control. **VibeCheck** is that tool.
 
-![VibeCheck Demo](https://via.placeholder.com/600x300.png?text=VibeCheck+Demo+GIF) _(Imagine a GIF showing VibeCheck intercepting a CRITICAL decision to drop a database table)_
+> Install with `npm install -g @harshalpatel2868/vibe-check` — zero AI, zero API keys, works offline forever.
 
 ## 🚀 Installation
 
@@ -86,8 +86,4 @@ Example `src/patterns/general.js` addition:
 
 ## 📜 License
 
-**Copyright © 2026 Harshal Patel. All Rights Reserved.**
-
-This software is **proprietary** and not open source. Unauthorized copying, modification, or distribution is strictly prohibited. You are granted a license to install and use the CLI tool as provided via npm, but the underlying source code and intellectual property remain exclusively with the author.
-
-For enterprise licensing or permission, please contact the author directly.
+MIT © 2026 Harshal Patel — free to use, modify, and distribute.
