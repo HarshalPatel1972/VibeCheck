@@ -139,12 +139,12 @@ async function processIntercept(type, filePath) {
     } else {
       // Restore
       console.log(`[Reverting] Restoring deleted file ${filePath}...`);
-      ignoredEvents.add(getIgnoreKey('add', filePath));
-      fs.writeFileSync(filePath, oldContent, 'utf8');
+      ignoredEvents.add(getIgnoreKey("add", filePath));
+      fs.writeFileSync(filePath, oldContent, "utf8");
     }
   }
 }
 
 module.exports = {
-  handleIntercept
+  handleIntercept,
 };
